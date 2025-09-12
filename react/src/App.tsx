@@ -1,13 +1,31 @@
-import React from "react";
-import { useCalcularIdade } from "./scripts/calcular_idade_format";
-import FormInput from './componentes/input_formulario';
-import SubmitButton from './componentes/botao_envio';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
+import type { DateInput, Age } from "./scripts/tipos";
+import { calcularIdade } from "./scripts/calculaIdade";
+import FormInput from "./componentes/input_formulario";
+import SubmitButton from "./componentes/botao_envio";
 
 function App() {
-  const { idade, register, handleSubmit, errors, onSubmit, setIdade } = useCalcularIdade();
+  const [age, setAge] = useState<Age>({ years: "--", months: "--", days: "--" });
+
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<DateInput>({
+    mode: "onTouched",
+  });
+
+  const onSubmit: SubmitHandler<DateInput> = (data) => {
+    const result = calcularIdade(data);
+
+    if (!result) {
+      setError("day", { type: "manual", message: "Deve ser uma data válida" });
+      return;
+    }
+
+    setAge(result);
+  };
 
   const onInvalid = () => {
-    setIdade({ years: "--", months: "--", days: "--" });
+    setAge({ years: "--", months: "--", days: "--" });
   };
 
   return (
@@ -17,7 +35,7 @@ function App() {
           <div className="grid grid-cols-3 gap-4">
             <FormInput id="day" label="Dia" placeholder="DD" register={register} error={errors.day} />
             <FormInput id="month" label="Mês" placeholder="MM" register={register} error={errors.month} />
-            <FormInput id="year" label="Ano" placeholder="YYYY" register={register} error={errors.year} />
+            <FormInput id="year" label="Ano" placeholder="AAAA" register={register} error={errors.year} />
           </div>
 
           <div className="relative flex items-center my-16 md:my-8">
@@ -27,9 +45,9 @@ function App() {
         </form>
 
         <section className="text-5xl md:text-7xl font-extrabold italic">
-          <p><span className="text-cyan-400">{idade.years}</span> anos</p>
-          <p><span className="text-cyan-400">{idade.months}</span> meses</p>
-          <p><span className="text-cyan-400">{idade.days}</span> dias</p>
+          <p><span className="text-cyan-400">{age.years}</span> anos</p>
+          <p><span className="text-cyan-400">{age.months}</span> meses</p>
+          <p><span className="text-cyan-400">{age.days}</span> dias</p>
         </section>
       </main>
     </div>
@@ -37,4 +55,3 @@ function App() {
 }
 
 export default App;
-

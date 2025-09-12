@@ -1,27 +1,34 @@
-import React from 'react';
+import React from "react";
+import type { FormInputProps } from "../scripts/tipos";
 
-type FormInputProps = {
-  label: string;
-  id: string;
-  placeholder: string;
-  register: (name: string) => any; // Adiciona o tipo para register
-  error?: any; // Opcional: para exibir erro
+const FormInput: React.FC<FormInputProps> = ({ id, label, placeholder, register, error }) => {
+  const labelColor = error ? "text-red-500" : "text-slate-400";
+  const borderColor = error ? "border-red-500 ring-red-500" : "border-slate-600 focus:ring-cyan-400";
+
+  return (
+    <div className="flex flex-col">
+      <label htmlFor={id} className={`text-sm font-bold uppercase tracking-widest mb-2 transition-colors ${labelColor}`}>
+        {label}
+      </label>
+      <input
+        id={id}
+        type="number"
+        placeholder={placeholder}
+        {...register(id, {
+          valueAsNumber: true,
+          required: "Este campo é obrigatório",
+          min: { value: 1, message: "Valor inválido" },
+          validate: {
+            dayRange: value => id !== "day" || (value >= 1 && value <= 31) || "Deve ser um dia válido",
+            monthRange: value => id !== "month" || (value >= 1 && value <= 12) || "Deve ser um mês válido",
+            yearInPast: value => id !== "year" || value <= new Date().getFullYear() || "Deve ser no passado",
+          },
+        })}
+        className={`bg-slate-700/50 border text-white text-xl md:text-2xl font-bold rounded-lg p-3 w-full focus:outline-none focus:ring-2 transition-all ${borderColor}`}
+      />
+      {error && <p className="text-red-500 text-xs italic mt-2">{error.message}</p>}
+    </div>
+  );
 };
-
-const FormInput = ({ label, id, placeholder, register, error }: FormInputProps) => (
-  <div className="flex flex-col gap-2">
-    <label htmlFor={id} className="uppercase font-bold text-xs tracking-[0.2em] text-cyan-400">
-      {label}
-    </label>
-    <input
-      id={id}
-      type="number"
-      placeholder={placeholder}
-      className={`w-full p-3 bg-slate-900 border ${error ? 'border-red-500' : 'border-slate-700'} rounded-lg text-xl md:text-2xl font-bold text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors`}
-      {...register(id)}
-    />
-    {error && <span className="text-red-400 text-xs">{error.message}</span>}
-  </div>
-);
 
 export default FormInput;

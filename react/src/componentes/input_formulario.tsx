@@ -1,7 +1,7 @@
 import React from "react";
 import type { FormInputProps } from "../scripts/tipos";
 
-const FormInput: React.FC<FormInputProps> = ({ id, label, placeholder, register, error }) => {
+const FormInput: React.FC<FormInputProps> = ({ id, label, placeholder, register, error, mode }) => {
   const labelColor = error ? "text-red-500" : "text-slate-400";
   const borderColor = error ? "border-red-500 ring-red-500" : "border-slate-600 focus:ring-cyan-400";
 
@@ -21,7 +21,17 @@ const FormInput: React.FC<FormInputProps> = ({ id, label, placeholder, register,
           validate: {
             dayRange: value => id !== "day" || (value >= 1 && value <= 31) || "Deve ser um dia válido",
             monthRange: value => id !== "month" || (value >= 1 && value <= 12) || "Deve ser um mês válido",
-            yearInPast: value => id !== "year" || value <= new Date().getFullYear() || "Deve ser no passado",
+            yearValidation: value => {
+              if (id !== "year") return true;
+              const currentYear = new Date().getFullYear();
+              if (mode === 'age') {
+                return value <= currentYear || "Deve ser no passado";
+              }
+              if (mode === 'event') {
+                return value >= currentYear || "Deve ser hoje ou no futuro";
+              }
+              return true;
+            },
           },
         })}
         className={`bg-slate-700/50 border text-white text-xl md:text-2xl font-bold rounded-lg p-3 w-full focus:outline-none focus:ring-2 transition-all ${borderColor}`}

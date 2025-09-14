@@ -18,4 +18,5 @@ export interface FormInputProps {
   placeholder: string;
   register: UseFormRegister<DateInput>;
   error?: FieldError;
+  mode: 'age' | 'event';
 }

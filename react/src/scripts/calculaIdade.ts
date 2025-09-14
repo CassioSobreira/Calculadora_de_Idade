@@ -5,11 +5,11 @@ export function calcularDiferencaData(data: DateInput, mode: 'age' | 'event'): A
   const targetDate = new Date(year, month - 1, day);
   const today = new Date();
   
-  // Reseta a hora para comparações de dia inteiro
+
   today.setHours(0, 0, 0, 0);
   targetDate.setHours(0,0,0,0);
 
-  // Validação para datas que não existem (ex: 31 de Fev)
+ 
   if (
     targetDate.getFullYear() !== year ||
     targetDate.getMonth() !== month - 1 ||
@@ -18,12 +18,12 @@ export function calcularDiferencaData(data: DateInput, mode: 'age' | 'event'): A
     return null; 
   }
 
-  // Validação baseada no modo
+ 
   if (mode === 'age' && targetDate > today) {
-    return null; // Data de nascimento não pode ser no futuro
+    return null; 
   }
   if (mode === 'event' && targetDate < today) {
-    return null; // Data do evento não pode ser no passado
+    return null;
   }
   
   const startDate = mode === 'age' ? targetDate : today;

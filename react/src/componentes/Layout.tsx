@@ -1,10 +1,10 @@
 import { NavLink, Outlet } from "react-router-dom";
 
 const Layout = () => {
-  // Estilo para o link de navegação que estiver ativo
+  
   const activeLinkStyle = {
-    backgroundColor: '#22d3ee', // Cor cyan-400
-    color: '#0f172a'       // Cor slate-900
+    backgroundColor: '#22d3ee', 
+    color: '#0f172a'       
   };
 
   return (
@@ -27,7 +27,7 @@ const Layout = () => {
           </NavLink>
         </nav>
         
-        {/* O conteúdo da página atual (o formulário) será renderizado aqui */}
+        {}
         <Outlet />
       </main>
     </div>

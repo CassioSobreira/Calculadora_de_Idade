@@ -12,7 +12,7 @@ interface FormPageProps {
 
 const FormPage: React.FC<FormPageProps> = ({ mode }) => {
   const [result, setResult] = useState<Age>({ years: "--", months: "--", days: "--" });
-  const { register, handleSubmit, formState: { errors }, setError, reset } = useForm<DateInput>({
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<DateInput>({
     mode: "onTouched",
   });
 
